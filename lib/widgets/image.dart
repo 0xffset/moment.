@@ -2,15 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 class ImageSave extends StatefulWidget {
-  const ImageSave({super.key});
 
+  final Function imageSave;
+  ImageSave(this.imageSave);
   @override
   State<ImageSave> createState() => _ImageSaveState();
 }
 
 class _ImageSaveState extends State<ImageSave> {
+
+
+
   File? _imageFile;
 
   Future<void> _takePicture() async {
@@ -23,8 +28,34 @@ class _ImageSaveState extends State<ImageSave> {
     setState(() {
       _imageFile = File(imageFile.path);
     });
+
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName =path.basename(imageFile.path);
+    final saveImagePath = await _imageFile!.copy('${appDir.path}/$fileName');
+
+    widget.imageSave(saveImagePath);
+
   }
 
+
+  Future<void> _takePictureFromGallery() async {
+    final picker = ImagePicker();
+    final imageFile =
+    await picker.pickImage(source: ImageSource.gallery, maxHeight: 600);
+    if (imageFile == null) {
+      return;
+    }
+    setState(() {
+      _imageFile = File(imageFile.path);
+    });
+
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName =path.basename(imageFile.path);
+    final saveImagePath = await _imageFile!.copy('${appDir.path}/$fileName');
+
+    widget.imageSave(saveImagePath);
+
+  }
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -49,7 +80,7 @@ class _ImageSaveState extends State<ImageSave> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _takePictureFromGallery,
               icon: const Icon(Icons.image),
               label: const Text('Add your image'),
             ),

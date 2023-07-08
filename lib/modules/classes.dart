@@ -13,13 +13,15 @@ class Image {
   late final String description;
   late final File image;
   late final time;
+  late final audio;
 
   Image(
       {required this.image,
       required this.title,
       required this.description,
       required this.id,
-      required this.time});
+      required this.time,
+      required this.audio});
 }
 
 class ImageFile with ChangeNotifier {
@@ -29,13 +31,14 @@ class ImageFile with ChangeNotifier {
   }
 
   Future<void> addImagePlace(
-      String title, String description, File image) async {
+      String title, String description, File image, File audio) async {
     final newImage = Image(
         image: image,
         title: title,
         description: description,
         id: uuid.v1(),
-        time: DateTime.now().toString());
+        time: DateTime.now().toString(),
+        audio: audio.path.toString());
     _items.add(newImage);
     notifyListeners();
     DataBaseHelper.insert('moments', {
@@ -43,7 +46,8 @@ class ImageFile with ChangeNotifier {
       'title': newImage.title,
       'description': newImage.description,
       'time': newImage.time,
-      'image': newImage.image.path
+      'image': newImage.image.path,
+      'audio': newImage.audio
     });
   }
 
@@ -53,12 +57,15 @@ class ImageFile with ChangeNotifier {
 
   Future<void> fetchImage() async {
     final list = await DataBaseHelper.getData('moments');
-    _items = list.map((e) => Image(
-        image: File(e['image']),
-        title: e['title'],
-        description: e['description'],
-        time: e['time'],
-        id: e['id'])).toList();
+    _items = list
+        .map((e) => Image(
+            image: File(e['image']),
+            title: e['title'],
+            description: e['description'],
+            time: e['time'],
+            id: e['id'],
+            audio: e['audio']))
+        .toList();
     notifyListeners();
   }
 }

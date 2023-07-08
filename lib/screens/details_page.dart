@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tarea_8/modules/classes.dart' as img;
 import 'dart:io';
+
+import 'package:tarea_8/widgets/show_audio.dart';
 class DetailsScreen extends StatefulWidget {
   static const routerName = 'DetailsScreen';
 
@@ -13,9 +15,9 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final imageId = ModalRoute.of(context)?.settings.arguments as String;
+    final Id = ModalRoute.of(context)?.settings.arguments as String;
     final image =
-        Provider.of<img.ImageFile>(context, listen: false).findImage(imageId);
+        Provider.of<img.ImageFile>(context, listen: false).findImage(Id);
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -31,6 +33,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Text(
             image.title,
+            textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 30.0),
           ),
           const SizedBox(
@@ -47,6 +50,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
             'The moment was take at ${DateFormat.yMMMd().format(DateTime.parse(image.time))} ',
             style: const TextStyle(fontSize: 15.0),
           ),
+          const SizedBox(
+            height: 0,
+          ),
+          RecordAudioPage(image.audio),
         ],
       ),
     );

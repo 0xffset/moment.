@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
-class ImageSave extends StatefulWidget {
 
+class ImageSave extends StatefulWidget {
   final Function imageSave;
   ImageSave(this.imageSave);
   @override
@@ -13,9 +13,6 @@ class ImageSave extends StatefulWidget {
 }
 
 class _ImageSaveState extends State<ImageSave> {
-
-
-
   File? _imageFile;
 
   Future<void> _takePicture() async {
@@ -30,18 +27,16 @@ class _ImageSaveState extends State<ImageSave> {
     });
 
     final appDir = await syspath.getApplicationDocumentsDirectory();
-    final fileName =path.basename(imageFile.path);
+    final fileName = path.basename(imageFile.path);
     final saveImagePath = await _imageFile!.copy('${appDir.path}/$fileName');
 
     widget.imageSave(saveImagePath);
-
   }
-
 
   Future<void> _takePictureFromGallery() async {
     final picker = ImagePicker();
     final imageFile =
-    await picker.pickImage(source: ImageSource.gallery, maxHeight: 600);
+        await picker.pickImage(source: ImageSource.gallery, maxHeight: 600);
     if (imageFile == null) {
       return;
     }
@@ -50,19 +45,19 @@ class _ImageSaveState extends State<ImageSave> {
     });
 
     final appDir = await syspath.getApplicationDocumentsDirectory();
-    final fileName =path.basename(imageFile.path);
+    final fileName = path.basename(imageFile.path);
     final saveImagePath = await _imageFile!.copy('${appDir.path}/$fileName');
 
     widget.imageSave(saveImagePath);
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
-          height: 200,
-          width: 200,
+          height: 150,
+          width: 150,
           decoration: BoxDecoration(
             border: Border.all(width: 2, color: Colors.deepOrange),
           ),
@@ -71,7 +66,7 @@ class _ImageSaveState extends State<ImageSave> {
                   _imageFile!,
                   fit: BoxFit.cover,
                 )
-              : const Center(child: Text('Not Image Yet')),
+              : const Center(child: Text('Not image selected yet')),
         ),
         const SizedBox(
           width: 20,

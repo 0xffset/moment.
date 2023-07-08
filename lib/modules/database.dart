@@ -8,7 +8,7 @@ class DataBaseHelper {
     return sql.openDatabase(path.join(datapath, 'moment.db'),
         onCreate: (db, version) {
       return db.execute(
-          'CREATE TABLE moments (id TEXT PRIMARY KEY, title TEXT, description TEXT, image TEXT, time TEXT)');
+          'CREATE TABLE moments (id TEXT PRIMARY KEY, title TEXT, description TEXT, image TEXT, time TEXT, audio TEXT)');
     }, version: 1);
   }
 
